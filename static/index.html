@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Store Intelligence</title>
+  <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+  <header class="shell masthead">
+    <div>
+      <p class="eyebrow">Task 4 · Data engineering</p>
+      <h1>Store Intelligence</h1>
+      <p class="lede">Clean revenue, reconciled customers, author-set demand, and an agent that answers through audited tools.</p>
+    </div>
+    <div class="status"><span></span> Analytics database online</div>
+  </header>
+
+  <main class="shell">
+    <nav id="store-tabs" class="tabs" aria-label="Store selection"></nav>
+
+    <section class="hero-grid">
+      <article class="hero-card">
+        <p class="label">Selected store</p>
+        <h2 id="store-title">STORE1</h2>
+        <p id="quality-note" class="muted">Loading cleaned source data…</p>
+      </article>
+      <article class="hero-card accent">
+        <p class="label">Top revenue day</p>
+        <h2 id="top-day-value">—</h2>
+        <p id="top-day-date" class="muted">—</p>
+      </article>
+    </section>
+
+    <section id="overview-view" class="view active">
+      <div id="kpis" class="kpi-grid"></div>
+      <div class="split">
+        <article class="panel chart-panel">
+          <div class="panel-heading">
+            <div><p class="eyebrow">Revenue cadence</p><h3>Daily revenue</h3></div>
+            <p class="muted">USD · cleaned orders</p>
+          </div>
+          <svg id="revenue-chart" viewBox="0 0 900 330" role="img" aria-label="Daily revenue line chart"></svg>
+        </article>
+        <article class="panel">
+          <div class="panel-heading"><div><p class="eyebrow">Peak demand</p><h3>Top 5 days</h3></div></div>
+          <div id="top-days" class="rank-list"></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="explorer-view" class="view">
+      <article class="panel">
+        <div class="panel-heading">
+          <div><p class="eyebrow">Agent-controlled view</p><h3 id="explorer-title">Filtered records</h3></div>
+          <button id="reset-view" class="ghost-button" type="button">Reset</button>
+        </div>
+        <p id="filter-summary" class="filter-summary">No filters applied.</p>
+        <div class="table-wrap"><table><thead id="explorer-head"></thead><tbody id="explorer-body"></tbody></table></div>
+      </article>
+    </section>
+
+    <section class="agent-section">
+      <article class="agent-copy">
+        <p class="eyebrow">Grounded data agent</p>
+        <h2>Ask, count, filter, control.</h2>
+        <p>The model never receives a raw data dump. It must call bounded analytics APIs for every answer and returns explicit actions for dashboard commands.</p>
+        <div class="examples">
+          <button class="example" data-prompt="How many real unique users are in this store?">Count real users</button>
+          <button class="example" data-prompt="Select users with e-mails started with s or p.">Select s/p emails</button>
+          <button class="example" data-prompt="Filter out books that have people names in the title.">Exclude named titles</button>
+          <button class="example" data-prompt="Show monthly revenue for this store.">Monthly revenue</button>
+        </div>
+      </article>
+      <article class="chat-panel">
+        <div id="messages" class="messages" aria-live="polite">
+          <div class="message assistant">Ask a question about the selected store, or tell me how to change the dashboard.</div>
+        </div>
+        <form id="chat-form">
+          <input id="chat-input" autocomplete="off" maxlength="1000" placeholder="Ask about revenue, users, books, or apply a filter…">
+          <button type="submit">Send</button>
+        </form>
+        <p id="tool-trace" class="trace">Answers are grounded in deterministic tool results.</p>
+      </article>
+    </section>
+  </main>
+  <script src="/static/app.js" defer></script>
+</body>
+</html>
