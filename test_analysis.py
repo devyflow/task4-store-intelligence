@@ -3,12 +3,21 @@ import unittest
 
 import pandas as pd
 
-from analysis import analyze_store, parse_price, reconcile_users
+from analysis import analyze_store, parse_price, parse_timestamp, reconcile_users
 from build_database import build
 from data_api import DataAPI
 
 
 class AnalysisTests(unittest.TestCase):
+    def test_incomplete_dates_cannot_become_today(self):
+        for raw in ("12:30", "2026", "October 29", "2026-10", "", None, "invalid"):
+            with self.subTest(raw=raw):
+                self.assertTrue(pd.isna(parse_timestamp(raw)))
+        for raw in ("2026-10-29 12:30", "29 Oct 2026; 12:30 PM", "2026-02-28"):
+            with self.subTest(raw=raw):
+                self.assertFalse(pd.isna(parse_timestamp(raw)))
+        self.assertTrue(pd.isna(parse_timestamp("2026-02-30")))
+
     def test_price_formats_and_conversion(self):
         self.assertEqual(str(parse_price("EUR 60")), "72.00")
         self.assertEqual(str(parse_price("51.25 $")), "51.25")

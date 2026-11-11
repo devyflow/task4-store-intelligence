@@ -11,6 +11,7 @@ from pathlib import Path
 import pandas as pd
 import yaml
 from dateutil import parser as date_parser
+from datetime import datetime
 
 EURO_TO_USD = Decimal("1.2")
 CENT = Decimal("0.01")
@@ -79,7 +80,14 @@ def parse_timestamp(value: object) -> pd.Timestamp:
     text = text.replace(";", " ").replace(",", " ")
     text = re.sub(r"\b([AP])\s*\.?\s*M\.?", r"\1M", text, flags=re.IGNORECASE)
     try:
-        return pd.Timestamp(date_parser.parse(text, fuzzy=True))
+        # A complete date must not depend on dateutil's default (today).
+        # Comparing different defaults detects omitted year/month/day without
+        # rejecting the mixed punctuation and date formats in the source.
+        first = date_parser.parse(text, fuzzy=True, default=datetime(1900, 1, 1))
+        second = date_parser.parse(text, fuzzy=True, default=datetime(2000, 12, 28))
+        if first.date() != second.date():
+            return pd.NaT
+        return pd.Timestamp(first)
     except (TypeError, ValueError, OverflowError):
         return pd.NaT
 
